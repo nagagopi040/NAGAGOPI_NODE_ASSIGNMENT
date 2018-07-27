@@ -10,11 +10,11 @@ var state = {
 exports.connect = function(url, done) {
 	if (state.db) return done()
 
-	MongoClient.connect(url, function(err, database) {
+	MongoClient.connect(url,{ useNewUrlParser: true }, function(err, database) {
 		if (err) return done(err)
 		state.db = database.db(config.mongodb.dbName)
 		state.usercollection = state.db.collection(config.mongodb.collections.users)
-		state.productscollection = state.db.collection(config.mongodb.collections.users)
+		state.productscollection = state.db.collection(config.mongodb.collections.products)
 		done()
 	})
 }
