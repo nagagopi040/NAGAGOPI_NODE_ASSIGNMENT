@@ -1,0 +1,11 @@
+{
+  "mongodb": {
+    "host": "localhost",
+    "port": 27017,
+    "dbName": "fagropsDB",
+    "collections": {
+      "users": "users",
+      "products": "products"
+    }
+  }
+}
