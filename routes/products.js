@@ -19,12 +19,16 @@ var upload = multer({
 
 router.get("/", (req, res, next) => {    
     var collection = db.getProductsCollection()
-    collection.find({}, {fields: {_id: 0}}).toArray((err, data) => {
-        if(data)
-            res.json({ products: data });
-        else
-            res.json({ error : err });
-    });
+    var query = '{ere: function (id) { return this.id = name}}'
+    if(query.includes('where')){
+        collection.find({}, {fields: {_id: 0}}).toArray((err, data) => {
+            if(data)
+                res.json({ products: data });
+            else
+                res.json({ error : err });
+        });
+    } else 
+        res.json({ message: "No products Available"})
 });
 
 router.post("/add", upload.single('productImage'), (req, res, next) => {
@@ -42,15 +46,23 @@ router.get("/view", (req, res, next) => {
     var id = req.query.id;
     var productName = req.query.productName;
     var collection = db.getProductsCollection()
-
-        collection.find({ $where: function() {
-            return (hex_md5(this.id) == id)
-        } }).toArray((err, data) => {
-            if (data[0] != null)
+    if(id){    
+        collection.find({id: id}).toArray((err, data) => {
+            if (data != null)
                 res.json({ product: data });
             else
                 res.json({ message: "No product with that id" });
         });
+    }else if(productName){    
+        collection.find({ productName: productName }).toArray((err, data) => {
+            if (data != null)
+                res.json({ product: data });
+            else
+                res.json({ message: "No product with that Name" });
+        });
+    }else {
+        res.json({ message: "NOT FOUND" })
+    }
 });
 
 router.post("/edit/:id", (req, res, next) => {
