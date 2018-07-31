@@ -47,7 +47,7 @@ router.get("/view", (req, res, next) => {
     var productName = req.query.productName;
     var collection = db.getProductsCollection()
     if(id){    
-        collection.find({id: id}).toArray((err, data) => {
+       collection.find({ $where: function () { return this.id === id } }).toArray((err, data) => {
             if (data != null)
                 res.json({ product: data });
             else
