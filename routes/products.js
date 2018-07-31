@@ -19,7 +19,7 @@ var upload = multer({
 
 router.get("/", (req, res, next) => {    
     var collection = db.getProductsCollection()
-    var query = '{ere: function (id) { return this.id = name}}'
+    var query = '{$where: function (id) { return this.id = name}}'
     if(query.includes('where')){
         collection.find({}, {fields: {_id: 0}}).toArray((err, data) => {
             if(data)
